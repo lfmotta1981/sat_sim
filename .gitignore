@@ -1,0 +1,16 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+venv/
+
+# Resultados gerados
+results/
+*.csv
+*.png
+
+# Editor / OS
+.vscode/
+.DS_Store
