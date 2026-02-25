@@ -1,6 +1,8 @@
 # Python cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
 # Virtual environment
 .venv/
@@ -14,3 +16,10 @@ results/
 # Editor / OS
 .vscode/
 .DS_Store
+Thumbs.db
+
+# Packaging
+build/
+dist/
+*.egg-info/
+sat_sim.egg-info/

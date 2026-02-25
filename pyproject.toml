@@ -1,0 +1,11 @@
+[project]
+name = "sat-sim"
+version = "0.1.0"
+description = "Satellite constellation simulation tool"
+requires-python = ">=3.10"
+
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib"
+]

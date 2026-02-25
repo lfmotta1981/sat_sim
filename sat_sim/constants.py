@@ -8,3 +8,6 @@ DEG2RAD = np.pi / 180.0
 RAD2DEG = 180.0 / np.pi
 
 J2 = 1.08262668e-3
+
+C_LIGHT = 299_792_458.0  # m/s
+K_BOLTZMANN = 1.380649e-23

@@ -1,6 +1,7 @@
 import csv
 import argparse
 import numpy as np
+import os
 
 from sat_sim.constants import R_EARTH, DEG2RAD
 from sat_sim.time import TimeArray
@@ -17,6 +18,7 @@ STATION_CATALOG = {
     "kiruna": (67.9, 21.1),
     "troll": (-72.0, 2.5),
     "alaska": (64.8, -147.5),
+    "taipei": (25.0, 121.7),
 }
 
 
@@ -177,13 +179,18 @@ def main():
     # -------------------------------
     # CSV
     # -------------------------------
-    with open("architecture_tradeoff.csv", "w", newline="") as f:
+    os.makedirs("results", exist_ok=True)
+    output_path = os.path.join(
+        "results",
+        "architecture_tradeoff.csv"
+    )
+
+    with open(output_path, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=results[0].keys())
         writer.writeheader()
         writer.writerows(results)
 
-    print("\nResultados salvos em: architecture_tradeoff.csv")
-
+    print(f"\nResultados salvos em: {output_path}")
 
 if __name__ == "__main__":
     main()

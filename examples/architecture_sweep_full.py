@@ -1,6 +1,7 @@
 import numpy as np
 import csv
 import argparse
+import os
 
 from sat_sim.constants import R_EARTH, DEG2RAD
 from sat_sim.time import TimeArray
@@ -162,7 +163,13 @@ def run_sweep(
     # -------------------------------
     # CSV
     # -------------------------------
-    with open("architecture_sweep_roi_results.csv", "w", newline="") as f:
+    os.makedirs("results", exist_ok=True)
+    output_path = os.path.join(
+        "results",
+        "architecture_sweep_roi_results.csv"
+    )
+
+    with open(output_path, "w", newline="") as f:
         writer = csv.DictWriter(
             f,
             fieldnames=results[0].keys()
@@ -170,6 +177,8 @@ def run_sweep(
         writer.writeheader()
         writer.writerows(results)
 
+    print(f"\nResultados salvos em: {output_path}")
+   
     # -------------------------------
     # Resumo
     # -------------------------------
