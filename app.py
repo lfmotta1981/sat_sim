@@ -219,6 +219,8 @@ with col3:
         origin="lower",
         transform=ccrs.PlateCarree(),
         cmap="RdYlGn",
+        vmin=0,
+        vmax=1440,
         alpha=0.85,
     )
 
@@ -242,6 +244,8 @@ with col4:
         origin="lower",
         transform=ccrs.PlateCarree(),
         cmap="RdYlGn_r",
+        vmin=0,
+        vmax=1440,
         alpha=0.85,
     )
 
