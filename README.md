@@ -1,250 +1,380 @@
-# 📡 sat_sim — Simulador minimalista de constelações LEO
+# 📡 sat_sim — Minimal LEO Constellation & VDES RF Simulator
 
-`sat_sim` é uma ferramenta em Python para **análise e trade-off de constelações LEO pequenas (≈ 4–20 satélites)**, inspirada em fluxos do ANSYS STK, com foco em:
+`sat_sim` é uma ferramenta em Python para **análise de constelações LEO pequenas (≈ 1–20 satélites)** com foco em:
 
-- clareza física
-- extensibilidade
-- estudos de arquitetura
-- uso via linha de comando (CLI)
+- mecânica orbital clara e auditável  
+- análise de acesso geométrico  
+- link budget VDE-SAT  
+- trade-off arquitetural orientado a requisitos  
+- execução via linha de comando (CLI)  
 
-O objetivo **não é visualização 3D sofisticada**, e sim **engenharia de sistemas orbitais**.
+O objetivo não é visualização 3D sofisticada.  
+O objetivo é **engenharia de sistemas orbitais e RF de forma minimalista, reproduzível e controlável**.
 
 ---
 
-## ✨ Capacidades principais
+# ✨ Capacidades Principais
 
-- Propagação orbital two-body + J2
+## 🛰 Mecânica Orbital
+
+- Propagação two-body
+- Perturbação J2
+- Elementos orbitais clássicos (COE)
 - Geração de constelações Walker (n planos × sats por plano)
-- Cálculo de acesso satélite–solo
-- Análise de cobertura temporal
-- Métricas:
-  - gap máximo sem cobertura
-  - revisit time médio
-  - cobertura acumulada
-- Visualizações 2D:
-  - timelines de acesso
-  - mapas de cobertura
-  - mapas de gap máximo
-  - snapshots de constelação
 
 ---
 
-## 🗂 Estrutura do projeto
+## 📡 Acesso Geométrico
 
-- sat_sim/ → core da biblioteca (física, acesso, cobertura)
-- examples/ → scripts executáveis (casos de uso)
-- results/ → outputs gerados (CSV, mapas)
-
-O core não depende de CLI.  
-Os scripts em examples/ são a interface principal para o usuário.
-
----
-
-## 🚀 Fluxo recomendado de uso
-
-### 1️⃣ Acesso básico (sanity check)
-examples/single_access.py
-
-O que faz:
-- Simula acesso de 1 satélite × 1 estação
-- Lista passes, duração e gaps
-
-Quando usar:
-- Validar a física do modelo
-- Entender efeito de altitude, inclinação e elevação mínima
-
-Resultado esperado:
-- Lista de passes ao longo do dia
-- Durações realistas (ordem de minutos)
-
----
-
-### 2️⃣ Acesso agregado de constelação
-examples/constellation.py
-
-O que faz:
-- Simula múltiplos satélites
-- Mostra timelines individuais e acesso agregado
-
-Quando usar:
-- Visualizar redução de gaps com mais satélites
-- Comparar arranjos geométricos de constelação
-
----
-
-### 3️⃣ Comparação dirigida de arquiteturas
-examples/architecture_tradeoff.py
-
-O que faz:
-- Compara arquiteturas candidatas
-- Calcula gap máximo e revisit médio
-- Salva resultados em CSV
-
-Quando usar:
-- Quando o total de satélites já é conhecido
-- Avaliar como distribuí-los entre planos orbitais
-
-Resultado esperado:
-- Tabela-resumo no terminal
-- Arquivo architecture_tradeoff.csv
-
----
-
-### 4️⃣ Exploração automática de arquiteturas (sweep)
-examples/architecture_sweep_full.py
-
-O que faz:
-- Varre arquiteturas até um número máximo de satélites
-- Avalia cobertura global e gap máximo
-- Usa uma ROI (ponto) como critério primário
-- Gera ranking e CSV
-
-Quando usar:
-- Estudos de trade-off
-- Descobrir arquiteturas promissoras automaticamente
-
----
-
-### 5️⃣ Mapas de decisão (7C)
-examples/architecture_maps_7c.py
-
-O que faz:
-- Gera mapas para arquiteturas selecionadas:
-  - cobertura temporal
+- Visibilidade satélite–estação
+- Elevação mínima configurável
+- Cálculo de:
+  - número de passes
+  - duração de passes
   - gap máximo
-- Destaque visual da ROI
-- Saída em PNG
-
-Quando usar:
-- Apoio à tomada de decisão
-- Comunicação com públicos não técnicos
+  - revisit time médio
+- Timeline de acesso agregado
 
 ---
 
-### 6️⃣ Snapshot estrutural da constelação
-examples/constellation_snapshot.py
+## 📶 RF — VDE-SAT Uplink
 
-O que faz:
-- Mostra posição dos satélites (lat/lon) em um instante
-- Inclui mapa-múndi para contexto geográfico
-
-Quando usar:
-- Entender a geometria orbital
-- Visualização explicativa da constelação
+- Link budget simplificado VDE-SAT
+- Critério baseado em fechamento de link (SNR mínimo)
+- Substituição do critério puramente geométrico por critério RF real
+- Métricas locais:
+  - disponibilidade percentual
+  - gap máximo RF
+  - revisit RF
 
 ---
 
-## 🛰 Estações terrestres
+## 📊 Trade-off Arquitetural
 
-O projeto utiliza um catálogo simples de estações, com possibilidade de override manual.
+- Sweep automático de arquiteturas
+- Filtro por requisitos:
+  - `--max-gap`
+  - `--min-availability`
+- Ranking por gap
+- Export CSV com header técnico (metadados da simulação)
 
-Estação default:
-- sternula
-  - Latitude: 57.02868
-  - Longitude: 9.94350
+---
+
+# 🗂 Estrutura do Projeto
+
+```
+sat_sim/
+│
+├── constants.py
+├── time.py
+├── ground/
+├── orbits/
+├── frames/
+├── access/
+│   └── vdes_access.py
+├── rf/
+│   └── vdes/
+│
+examples/
+│   ├── single_access.py
+│   ├── single_access_vdes.py
+│   ├── local_availability_vdes.py
+│   ├── architecture_tradeoff.py
+│   ├── architecture_sweep_full.py
+│   └── architecture_sweep_local_rf.py
+│
+results/
+```
+
+O diretório `results/` é criado automaticamente para armazenar CSVs.
+
+---
+
+# 🚀 Fluxo Recomendado de Uso
+
+---
+
+## 1️⃣ Validação Orbital Básica
+
+### `single_access.py`
+
+Simula:
+- 1 satélite
+- 1 estação
+- acesso puramente geométrico
 
 Uso:
-- --station svalbard
-- --lat 60.0 --lon 15.0
 
-Prioridade de seleção:
-1. lat/lon manual
-2. estação do catálogo
-3. default: sternula
+```bash
+python examples/single_access.py
+```
 
 ---
 
-## 📍 Região de Interesse (ROI)
+## 2️⃣ Validação RF VDE-SAT
 
-Atualmente suportado:
-- ponto geográfico
+### `single_access_vdes.py`
 
-Formato:
-- --roi point:lat,lon
+Substitui visibilidade geométrica por fechamento RF.
 
-A ROI é usada como critério primário de decisão, tipicamente o gap máximo local.
+Uso:
 
----
+```bash
+python examples/single_access_vdes.py
+```
 
-## 📊 Interpretação das métricas
-
-- Gap máximo: pior intervalo sem cobertura
-- Revisit médio: frequência média de acesso
-- Cobertura acumulada: tempo total com visibilidade
-
-Regra prática:
-- menor gap → maior robustez
-- maior cobertura → maior disponibilidade
-- trade-offs são esperados
+Resultado:
+- número de instantes com uplink fechado
+- duração total
+- primeiro acesso
 
 ---
 
-## 🔧 Argumentos de linha de comando (CLI)
+## 3️⃣ Disponibilidade RF Local
 
-### architecture_tradeoff.py
+### `local_availability_vdes.py`
 
-Avalia arquiteturas específicas para uma estação terrestre.
+Calcula:
+- disponibilidade percentual
+- gap máximo
+- revisit médio
 
-Uso básico:
-- python examples/architecture_tradeoff.py
+Exemplo:
 
-Estação:
-- --station <nome>  (sternula, svalbard, kiruna, troll, alaska)
-- --lat <graus>
-- --lon <graus>
-
-Órbita:
-- --altitude <km>       (default: 550)
-- --inclination <deg>   (default: 98)
-- --min-elev <deg>      (default: 10)
-
-Tempo:
-- --duration <h>  (default: 24)
-- --dt <s>        (default: 30)
-
-Arquitetura:
-- --total-sats <N>  (gera automaticamente arquiteturas com N satélites)
-
-Se total-sats não for fornecido, o script avalia um conjunto default.
+```bash
+python examples/local_availability_vdes.py \
+    --lat 57.02868 \
+    --lon 9.94350 \
+    --n-planes 2 \
+    --sats-per-plane 2
+```
 
 ---
 
-### architecture_sweep_full.py
+## 4️⃣ Trade-off Direto de Arquiteturas
 
-Explora automaticamente arquiteturas até um número máximo de satélites, usando ROI como critério primário.
+### `architecture_tradeoff.py`
 
-Uso básico:
-- python examples/architecture_sweep_full.py
+Compara arquiteturas específicas para uma estação.
 
-Órbita:
-- --altitude <km>     (default: 550)
-- --inclination <deg> (default: 98)
+Parâmetros principais:
 
-Espaço de arquiteturas:
-- --n-max <N> (default: 4)
+- `--lat`, `--lon`
+- `--altitude`
+- `--inclination`
+- `--duration`
+- `--dt`
 
-ROI:
-- --roi point:lat,lon
-- default: point:57.02868,9.94350
+Uso:
 
----
-
-## Next version:
-
-- Link budget / RF
-
-## Escopo (o que o projeto NÃO faz)
-
-- Atitude
-- Manobras
-- 3D interativo em tempo real
-- Otimização automática avançada
+```bash
+python examples/architecture_tradeoff.py \
+    --lat 57.0 \
+    --lon 10.0
+```
 
 ---
 
-## 🧠 Filosofia do projeto
+## 5️⃣ Sweep Global (Geométrico)
 
-- scripts > GUI
-- clareza > performance
-- decisões explícitas > automação cega
-- extensível, sem inchaço
+### `architecture_sweep_full.py`
+
+Varre arquiteturas até `N_max` satélites.
+
+Critério primário:
+- gap máximo em ROI
+
+Uso:
+
+```bash
+python examples/architecture_sweep_full.py --n-max 8
+```
+
+---
+
+## 6️⃣ Sweep Local RF (VDES)
+
+### `architecture_sweep_local_rf.py`
+
+Motor principal de decisão RF.
+
+Calcula, para cada arquitetura:
+
+- disponibilidade (%)
+- gap máximo (min)
+
+Permite requisitos automáticos:
+
+- `--max-gap`
+- `--min-availability`
+
+---
+
+### Exemplos
+
+### Ranking completo
+
+```bash
+python examples/architecture_sweep_local_rf.py --n-max 12
+```
+
+---
+
+### Requisito de gap
+
+```bash
+python examples/architecture_sweep_local_rf.py \
+    --n-max 12 \
+    --max-gap 45
+```
+
+---
+
+### Requisito combinado
+
+```bash
+python examples/architecture_sweep_local_rf.py \
+    --n-max 12 \
+    --max-gap 45 \
+    --min-availability 40
+```
+
+---
+
+# 📄 CSV Export
+
+O sweep gera automaticamente:
+
+```
+results/architecture_sweep_local_rf.csv
+```
+
+Se houver filtro por requisitos:
+
+```
+results/architecture_sweep_local_rf_filtered.csv
+```
+
+---
+
+## Header Técnico
+
+Cada CSV contém metadados completos:
+
+```
+# Local RF Architecture Sweep
+# Latitude [deg]: 57.02868
+# Longitude [deg]: 9.94350
+# Altitude [km]: 550.0
+# Inclination [deg]: 98.0
+# Duration [h]: 24.0
+# Time step [s]: 30.0
+# N_max: 12
+# Max gap requirement [min]: 45
+# Min availability requirement [%]: 40
+#
+n_planes,sats_per_plane,total_sats,availability_percent,worst_gap_min
+...
+```
+
+Isso garante:
+
+- reprodutibilidade
+- auditabilidade
+- rastreabilidade de resultados
+
+---
+
+# 🛰 Estação Default
+
+Estação padrão:
+
+```
+Latitude: 57.02868
+Longitude: 9.94350
+Nome informal: sternula
+```
+
+Pode ser sobrescrita via:
+
+```
+--lat
+--lon
+```
+
+---
+
+# ⚙️ Parâmetros Orbitais
+
+Parâmetros configuráveis via CLI:
+
+| Argumento | Descrição | Default |
+|-----------|-----------|---------|
+| `--altitude` | Altitude orbital [km] | 550 |
+| `--inclination` | Inclinação [deg] | 98 |
+| `--duration` | Duração da simulação [h] | 24 |
+| `--dt` | Passo temporal [s] | 30 |
+| `--n-max` | Máximo total de satélites | 8 |
+
+---
+
+# 📡 Modelo RF Atual
+
+O link budget VDE-SAT considera:
+
+- frequência VHF satélite
+- perda de espaço livre
+- ganho de antena
+- requisito mínimo de SNR
+- fechamento de link booleano
+
+O modelo é simplificado mas estruturado para futura expansão por LinkID.
+
+---
+
+# 🧠 Filosofia do Projeto
+
+`sat_sim` segue princípios:
+
+- simplicidade estrutural
+- separação clara entre orbital e RF
+- CLI como interface primária
+- resultados determinísticos
+- foco em engenharia, não visualização
+
+---
+
+# 📌 Roadmap Natural
+
+Possíveis evoluções futuras:
+
+- modelagem por LinkID VDE-SAT
+- grid RF coverage
+- Pareto frontier multi-objetivo
+- sweep de altitude e inclinação
+- paralelização
+- timestamp e git hash automático nos CSVs
+
+---
+
+# 📦 Versionamento
+
+- `v0.1` — núcleo orbital
+- `v0.2` — engine RF + sweep orientado a requisitos
+
+---
+
+# 🏁 Conclusão
+
+`sat_sim` já é capaz de:
+
+- dimensionar constelações LEO pequenas
+- avaliar disponibilidade VDE-SAT local
+- comparar arquiteturas sob requisitos reais
+- exportar resultados auditáveis
+
+É um **mission analysis engine minimalista com camada RF integrada**.
+
+---
+
+```
