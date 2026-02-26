@@ -7,6 +7,27 @@ Versioning is lightweight and incremental.
 
 ---
 
+## [0.3.0] – Orbital GUI & Visual Trade Space
+### Added
+
+- Streamlit-based graphical interface (app.py)
+  - Local orbital trade-space exploration (geometric visibility)
+  - Automatic architecture ranking (minimum max gap)
+  - Trade-space plots:
+    - Max gap vs total satellites
+    - Availability vs total satellites
+    - Global coverage heatmap (Cartopy-based)
+    - Global maximum gap heatmap
+    - Constellation snapshot (t0) rendered on world map
+- Professional visualization layout for proposal use
+- requirements.txt for environment reproducibility
+
+### Improved
+- Integer-only X-axis in trade-space plots
+- Enhanced map rendering using Cartopy
+- Visual clarity for non-technical audiences
+- Separation between analysis layer and GUI layer
+
 ## [0.2.0] - RF Engine & Requirement-Based Architecture Sweep
 
 ### Added

@@ -318,6 +318,40 @@ Parâmetros configuráveis via CLI:
 
 ---
 
+# 🖥 Graphical Interface (Streamlit)
+
+sat_sim now includes a local graphical interface for orbital trade-space exploration.
+The GUI is intended for:
+- technical decision support
+- commercial proposal preparation
+- non-technical stakeholder visualization
+
+Running the GUI
+From the project root:
+"streamlit run app.py"
+The application runs locally in your browser.
+
+🔎 GUI Capabilities (Orbital Mode v1)
+The current GUI focuses on geometric orbital access (no RF constraints yet).
+It provides:
+- Architecture sweep (up to N satellites)
+- Automatic ranking (minimum max gap)
+- Local availability metrics
+- Mean revisit time
+- Mean pass duration
+
+Trade-space plots:
+- Max gap vs total satellites
+- Availability vs total satellites
+
+Global maps:
+- Coverage map (minutes per day)
+- Maximum gap map
+
+Constellation snapshot (t0) on world map
+
+---
+
 # 📡 Modelo RF Atual
 
 O link budget VDE-SAT considera:
@@ -330,30 +364,6 @@ O link budget VDE-SAT considera:
 
 O modelo é simplificado mas estruturado para futura expansão por LinkID.
 
----
-
-# 🧠 Filosofia do Projeto
-
-`sat_sim` segue princípios:
-
-- simplicidade estrutural
-- separação clara entre orbital e RF
-- CLI como interface primária
-- resultados determinísticos
-- foco em engenharia, não visualização
-
----
-
-# 📌 Roadmap Natural
-
-Possíveis evoluções futuras:
-
-- modelagem por LinkID VDE-SAT
-- grid RF coverage
-- Pareto frontier multi-objetivo
-- sweep de altitude e inclinação
-- paralelização
-- timestamp e git hash automático nos CSVs
 
 ---
 
@@ -361,19 +371,17 @@ Possíveis evoluções futuras:
 
 - `v0.1` — núcleo orbital
 - `v0.2` — engine RF + sweep orientado a requisitos
-
+- `v0.3` — introduzindo GUI para o núcleo orbital
 ---
 
 # 🏁 Conclusão
 
-`sat_sim` já é capaz de:
+`sat_sim` é capaz de:
 
 - dimensionar constelações LEO pequenas
 - avaliar disponibilidade VDE-SAT local
 - comparar arquiteturas sob requisitos reais
 - exportar resultados auditáveis
-
-É um **mission analysis engine minimalista com camada RF integrada**.
 
 ---
 
